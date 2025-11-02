@@ -54,29 +54,30 @@ ros2 launch mobile_robot_description nav2_simulation.launch.py
 ```
 
 ## Velocity Control
-- Send linear and angular velocity commands to the robot
-- Implement ROS 2 publishers for velocity commands
-- Interface with motor controllers via UART
+- Monitor linear and angular velocity commands from Nav2
+- Print velocity commands to console for debugging
+- Velocity monitor node: `src/mobile_robot_description/mobile_robot_description/velocity_monitor.py`
+- Subscribes to `/cmd_vel` topic and displays velocity values
 
 ## Feedback Systems
 ### IMU Integration
-- Read IMU data via UART
-- Publish IMU messages to ROS 2 topics
-- Use for robot localization and stabilization
+- IMU sensor included in URDF for simulation
+- Gazebo IMU plugin provides simulated IMU data
+- Publishes to `/imu/data` topic
 
 ### Velocity Feedback
-- Read actual velocities from encoders/motors via UART
-- Compare with commanded velocities for control loops
-- Publish odometry data
+- Odometry data provided by Gazebo Ackermann controller
+- Publishes to `/odom` topic
+- Velocity monitoring through console output
 
 ## Implementation Plan
 1. **Robot Description**: ✅ Created URDF/Xacro files with robot dimensions and parameters (`urdf/robot.urdf.xacro`)
-2. **Hardware Interface**: Develop UART communication nodes for velocity commands and feedback
-3. **IMU Node**: ROS 2 node to read IMU data via UART
-4. **Velocity Control Node**: Node to send velocity commands and read feedback
+2. **Hardware Interface**: ✅ Created velocity monitor node for console output instead of UART
+3. **IMU Node**: ✅ IMU simulation through Gazebo plugin
+4. **Velocity Control Node**: ✅ Velocity monitoring and display implemented
 5. **Nav2 Integration**: ✅ Created ROS 2 workspace and Nav2 configuration for forklift robot
 6. **Testing**: Unit tests and integration tests for each component
-7. **Simulation**: Optional Gazebo simulation for testing before hardware deployment
+7. **Simulation**: ✅ Gazebo simulation ready for testing
 
 ## Next Steps
 - Define specific robot dimensions and parameters

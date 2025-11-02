@@ -15,8 +15,8 @@ setup(
     zip_safe=True,
     maintainer='alan',
     maintainer_email='przemekcinkowski1@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Mobile robot description and Nav2 integration for forklift robot',
+    license='MIT',
     extras_require={
         'test': [
             'pytest',
@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'velocity_monitor = mobile_robot_description.velocity_monitor:main',
         ],
     },
 )

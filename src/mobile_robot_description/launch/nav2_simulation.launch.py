@@ -91,12 +91,21 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Velocity Monitor Node
+    velocity_monitor = launch_ros.actions.Node(
+        package='mobile_robot_description',
+        executable='velocity_monitor',
+        name='velocity_monitor',
+        output='screen'
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true', description='Use simulation time'),
         DeclareLaunchArgument('world', default_value='empty.world', description='Gazebo world file'),
         robot_state_publisher,
         gazebo,
         spawn_entity,
+        velocity_monitor,
         nav2_bringup,
         rviz
     ])
