@@ -1,7 +1,7 @@
 # Mobile Robot Project with ROS 2 Jazzy and Nav2
 
 ## Overview
-This project aims to develop a mobile robot using ROS 2 Jazzy on a Raspberry Pi running Ubuntu. The robot will utilize Nav2 for navigation, with velocity control and feedback systems implemented via UART communication.
+This project aims to develop a small forklift mobile robot using ROS 2 Jazzy on a Raspberry Pi running Ubuntu. The robot uses rear-wheel steering with front-wheel drive, and will utilize Nav2 for navigation with velocity control and feedback systems implemented via UART communication.
 
 ## Setup
 - **ROS 2 Distribution**: Jazzy
@@ -10,15 +10,20 @@ This project aims to develop a mobile robot using ROS 2 Jazzy on a Raspberry Pi 
 
 ## Robot Configuration
 ### Physical Parameters
+- **Type**: Small forklift with Ackermann steering
 - **Dimensions**: Length: 0.5m, Width: 0.4m, Height: 0.2m
 - **Wheelbase**: 0.3m (distance between front and rear axles)
 - **Track Width**: 0.35m (distance between left and right wheels)
-- **Wheel Radius**: 0.05m
+- **Front Wheel Radius**: 0.07m
+- **Rear Wheel Radius**: 0.05m
 - **Wheel Width**: 0.03m
-- **Caster Wheel Radius**: 0.02m
-- **Max Linear Velocity**: [To be determined based on motor capabilities]
-- **Max Angular Velocity**: [To be determined based on wheel configuration]
+- **Max Steer Angle**: 45 degrees (0.7854 radians)
 - **Mass**: 5.0kg (base) + 0.5kg per wheel
+
+### Drive System
+- **Steering**: Rear-wheel steering (forklift-style)
+- **Front Wheels**: Drive only (forward/backward movement)
+- **Rear Wheels**: Steering only (turning)
 
 ### Sensor Configuration
 - **IMU**: Connected via UART for orientation feedback

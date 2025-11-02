@@ -2,18 +2,18 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mobile_robot">
 
   <!-- Robot Parameters -->
-  <xacro:property name="robot_length" value="0.5"/>
-  <xacro:property name="robot_width" value="0.4"/>
-  <xacro:property name="robot_height" value="0.2"/>
-  <xacro:property name="wheel_radius" value="0.05"/>
-  <xacro:property name="wheel_width" value="0.03"/>
-  <xacro:property name="wheelbase" value="0.3"/>
-  <xacro:property name="track_width" value="0.35"/>
-  <xacro:property name="caster_radius" value="0.02"/>
-  <xacro:property name="caster_width" value="0.02"/>
-  <xacro:property name="mass" value="5.0"/>
-  <xacro:property name="wheel_mass" value="0.5"/>
-  <xacro:property name="imu_mass" value="0.1"/>
+  <xacro:property name="robot_length" value="0.3"/>
+  <xacro:property name="robot_width" value="0.15"/>
+  <xacro:property name="robot_height" value="0.3"/>
+  <xacro:property name="front_wheel_radius" value="0.07"/>
+  <xacro:property name="rear_wheel_radius" value="0.05"/>
+  <xacro:property name="wheel_width" value="0.02"/>
+  <xacro:property name="wheelbase" value="0.2"/>
+  <xacro:property name="track_width" value="0.14"/>
+  <xacro:property name="mass" value="3.0"/>
+  <xacro:property name="wheel_mass" value="0.1"/>
+  <xacro:property name="imu_mass" value="0.01"/>
+  <xacro:property name="max_steer_angle" value="0.7854"/> <!-- 45 degrees -->
 
   <!-- Base Link -->
   <link name="base_link">
@@ -43,7 +43,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        <cylinder radius="${front_wheel_radius}" length="${wheel_width}"/>
       </geometry>
       <material name="black">
         <color rgba="0.1 0.1 0.1 1.0"/>
@@ -52,7 +52,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        <cylinder radius="${front_wheel_radius}" length="${wheel_width}"/>
       </geometry>
     </collision>
     <inertial>
@@ -66,7 +66,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        <cylinder radius="${front_wheel_radius}" length="${wheel_width}"/>
       </geometry>
       <material name="black">
         <color rgba="0.1 0.1 0.1 1.0"/>
@@ -75,7 +75,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        <cylinder radius="${front_wheel_radius}" length="${wheel_width}"/>
       </geometry>
     </collision>
     <inertial>
@@ -84,12 +84,12 @@
     </inertial>
   </link>
 
-  <!-- Left Rear Caster Wheel -->
-  <link name="left_rear_caster">
+  <!-- Left Rear Wheel -->
+  <link name="left_rear_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${caster_radius}" length="${caster_width}"/>
+        <cylinder radius="${rear_wheel_radius}" length="${wheel_width}"/>
       </geometry>
       <material name="gray">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -98,21 +98,21 @@
     <collision>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${caster_radius}" length="${caster_width}"/>
+        <cylinder radius="${rear_wheel_radius}" length="${wheel_width}"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
     </inertial>
   </link>
 
-  <!-- Right Rear Caster Wheel -->
-  <link name="right_rear_caster">
+  <!-- Right Rear Wheel -->
+  <link name="right_rear_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${caster_radius}" length="${caster_width}"/>
+        <cylinder radius="${rear_wheel_radius}" length="${wheel_width}"/>
       </geometry>
       <material name="gray">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -121,12 +121,12 @@
     <collision>
       <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
       <geometry>
-        <cylinder radius="${caster_radius}" length="${caster_width}"/>
+        <cylinder radius="${rear_wheel_radius}" length="${wheel_width}"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
     </inertial>
   </link>
 
@@ -154,36 +154,38 @@
   </link>
 
   <!-- Joints -->
-  <!-- Left Front Wheel Joint -->
-  <joint name="left_front_wheel_joint" type="continuous">
+  <!-- Left Front Drive Joint -->
+  <joint name="left_front_drive_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_front_wheel"/>
-    <origin xyz="${wheelbase/2} ${track_width/2} -${robot_height/2 + wheel_radius}" rpy="0 0 0"/>
+    <origin xyz="${wheelbase/2} ${track_width/2} -${robot_height/2 + front_wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Right Front Wheel Joint -->
-  <joint name="right_front_wheel_joint" type="continuous">
+  <!-- Right Front Drive Joint -->
+  <joint name="right_front_drive_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_front_wheel"/>
-    <origin xyz="${wheelbase/2} -${track_width/2} -${robot_height/2 + wheel_radius}" rpy="0 0 0"/>
+    <origin xyz="${wheelbase/2} -${track_width/2} -${robot_height/2 + front_wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Left Rear Caster Joint -->
-  <joint name="left_rear_caster_joint" type="continuous">
+  <!-- Left Rear Steering Joint -->
+  <joint name="left_rear_steer_joint" type="revolute">
     <parent link="base_link"/>
-    <child link="left_rear_caster"/>
-    <origin xyz="-${wheelbase/2} ${track_width/2 - 0.05} -${robot_height/2 + caster_radius}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <child link="left_rear_wheel"/>
+    <origin xyz="-${wheelbase/2} ${track_width/2} -${robot_height/2 + rear_wheel_radius}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-${max_steer_angle}" upper="${max_steer_angle}" effort="1000" velocity="1.0"/>
   </joint>
 
-  <!-- Right Rear Caster Joint -->
-  <joint name="right_rear_caster_joint" type="continuous">
+  <!-- Right Rear Steering Joint -->
+  <joint name="right_rear_steer_joint" type="revolute">
     <parent link="base_link"/>
-    <child link="right_rear_caster"/>
-    <origin xyz="-${wheelbase/2} -${track_width/2 - 0.05} -${robot_height/2 + caster_radius}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <child link="right_rear_wheel"/>
+    <origin xyz="-${wheelbase/2} -${track_width/2} -${robot_height/2 + rear_wheel_radius}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-${max_steer_angle}" upper="${max_steer_angle}" effort="1000" velocity="1.0"/>
   </joint>
 
   <!-- IMU Joint -->
@@ -195,17 +197,20 @@
 
   <!-- Gazebo Plugins -->
   <gazebo>
-    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <plugin name="ackermann_drive_controller" filename="libgazebo_ros_ackermann_drive.so">
       <ros>
         <namespace>/</namespace>
       </ros>
       <update_rate>30</update_rate>
-      <left_joint>left_front_wheel_joint</left_joint>
-      <right_joint>right_front_wheel_joint</right_joint>
+      <left_steering_joint>left_rear_steer_joint</left_steering_joint>
+      <right_steering_joint>right_rear_steer_joint</right_steering_joint>
+      <left_rear_joint>left_front_drive_joint</left_rear_joint>
+      <right_rear_joint>right_front_drive_joint</right_rear_joint>
       <wheel_separation>${track_width}</wheel_separation>
-      <wheel_diameter>${2*wheel_radius}</wheel_diameter>
+      <wheel_diameter>${2*front_wheel_radius}</wheel_diameter>
       <max_wheel_torque>20</max_wheel_torque>
       <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <max_steer_angle>${max_steer_angle}</max_steer_angle>
       <command_topic>cmd_vel</command_topic>
       <odometry_topic>odom</odometry_topic>
       <odometry_frame>odom</odometry_frame>
