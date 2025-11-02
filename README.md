@@ -1,0 +1,69 @@
+# Mobile Robot Project with ROS 2 Jazzy and Nav2
+
+## Overview
+This project aims to develop a mobile robot using ROS 2 Jazzy on a Raspberry Pi running Ubuntu. The robot will utilize Nav2 for navigation, with velocity control and feedback systems implemented via UART communication.
+
+## Setup
+- **ROS 2 Distribution**: Jazzy
+- **Platform**: Raspberry Pi with Ubuntu
+- **Navigation Stack**: Nav2
+
+## Robot Configuration
+### Physical Parameters
+- **Dimensions**: Length: 0.5m, Width: 0.4m, Height: 0.2m
+- **Wheelbase**: 0.3m (distance between front and rear axles)
+- **Track Width**: 0.35m (distance between left and right wheels)
+- **Wheel Radius**: 0.05m
+- **Wheel Width**: 0.03m
+- **Caster Wheel Radius**: 0.02m
+- **Max Linear Velocity**: [To be determined based on motor capabilities]
+- **Max Angular Velocity**: [To be determined based on wheel configuration]
+- **Mass**: 5.0kg (base) + 0.5kg per wheel
+
+### Sensor Configuration
+- **IMU**: Connected via UART for orientation feedback
+- **Velocity Feedback**: Actual linear and angular velocities read via UART
+
+## Navigation with Nav2
+- Use Nav2 stack for autonomous navigation
+- Robot description: `urdf/robot.urdf.xacro`
+- Configure robot parameters in URDF/Xacro files
+- Set up navigation parameters (costmaps, planners, controllers)
+
+## Velocity Control
+- Send linear and angular velocity commands to the robot
+- Implement ROS 2 publishers for velocity commands
+- Interface with motor controllers via UART
+
+## Feedback Systems
+### IMU Integration
+- Read IMU data via UART
+- Publish IMU messages to ROS 2 topics
+- Use for robot localization and stabilization
+
+### Velocity Feedback
+- Read actual velocities from encoders/motors via UART
+- Compare with commanded velocities for control loops
+- Publish odometry data
+
+## Implementation Plan
+1. **Robot Description**: ✅ Created URDF/Xacro files with robot dimensions and parameters (`urdf/robot.urdf.xacro`)
+2. **Hardware Interface**: Develop UART communication nodes for velocity commands and feedback
+3. **IMU Node**: ROS 2 node to read IMU data via UART
+4. **Velocity Control Node**: Node to send velocity commands and read feedback
+5. **Nav2 Integration**: Configure Nav2 with robot parameters
+6. **Testing**: Unit tests and integration tests for each component
+7. **Simulation**: Optional Gazebo simulation for testing before hardware deployment
+
+## Next Steps
+- Define specific robot dimensions and parameters
+- Implement UART communication protocols
+- Develop ROS 2 nodes for control and feedback
+- Integrate with Nav2 stack
+- Test on actual hardware
+
+## Dependencies
+- ROS 2 Jazzy
+- Nav2 packages
+- UART communication libraries
+- IMU drivers (if applicable)
