@@ -28,7 +28,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'use_sim_time': use_sim_time,
-            'robot_description': launch_ros.actions.Command([
+            'robot_description': launch.substitutions.Command([
                 'xacro ', urdf_file
             ])
         }]
@@ -38,24 +38,24 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
-                FindPackageShare('gazebo_ros'),
+                FindPackageShare('ros_gz_sim'),
                 'launch',
-                'gazebo.launch.py'
+                'gz_sim.launch.py'
             ])
         ]),
         launch_arguments={
-            'world': world_file,
-            'verbose': 'true'
+            'gz_args': '-r -s empty.sdf'
         }.items()
     )
 
     # Spawn robot in Gazebo
     spawn_entity = launch_ros.actions.Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
+        package='ros_gz_sim',
+        executable='create',
         arguments=[
+            '-world', 'empty',
             '-topic', '/robot_description',
-            '-entity', 'mobile_robot',
+            '-name', 'mobile_robot',
             '-x', '0.0',
             '-y', '0.0',
             '-z', '0.0'
@@ -80,16 +80,16 @@ def generate_launch_description():
         }.items()
     )
 
-    # RViz
-    rviz_config = os.path.join(pkg_share, 'rviz', 'nav2_default_view.rviz')
-    rviz = launch_ros.actions.Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config],
-        parameters=[{'use_sim_time': use_sim_time}],
-        output='screen'
-    )
+    # RViz - commented out for headless operation
+    # rviz_config = os.path.join(pkg_share, 'rviz', 'nav2_default_view.rviz')
+    # rviz = launch_ros.actions.Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     name='rviz2',
+    #     arguments=['-d', rviz_config],
+    #     parameters=[{'use_sim_time': use_sim_time}],
+    #     output='screen'
+    # )
 
     # Velocity Monitor Node
     velocity_monitor = launch_ros.actions.Node(
@@ -106,6 +106,6 @@ def generate_launch_description():
         gazebo,
         spawn_entity,
         velocity_monitor,
-        nav2_bringup,
-        rviz
+        nav2_bringup
+        # rviz  # commented out for headless operation
     ])

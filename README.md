@@ -59,6 +59,18 @@ ros2 launch mobile_robot_description nav2_simulation.launch.py
 - Velocity monitor node: `src/mobile_robot_description/mobile_robot_description/velocity_monitor.py`
 - Subscribes to `/cmd_vel` topic and displays velocity values
 
+```bash
+# Navigate to workspace
+cd /home/alan/mobile-robot
+
+# Source ROS 2 and workspace
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+# Launch simulation with velocity monitoring
+ros2 launch mobile_robot_description nav2_simulation.launch.py
+```
+
 ## Feedback Systems
 ### IMU Integration
 - IMU sensor included in URDF for simulation
@@ -76,14 +88,15 @@ ros2 launch mobile_robot_description nav2_simulation.launch.py
 3. **IMU Node**: ✅ IMU simulation through Gazebo plugin
 4. **Velocity Control Node**: ✅ Velocity monitoring and display implemented
 5. **Nav2 Integration**: ✅ Created ROS 2 workspace and Nav2 configuration for forklift robot
-6. **Testing**: Unit tests and integration tests for each component
-7. **Simulation**: ✅ Gazebo simulation ready for testing
+6. **Nav2 Installation**: ✅ Installed Nav2 packages including ackermann steering controller
+7. **Testing**: Unit tests and integration tests for each component
+8. **Simulation**: ✅ Gazebo simulation ready for testing
 
 ## Next Steps
-- Define specific robot dimensions and parameters
-- Implement UART communication protocols
+- Test Nav2 simulation with forklift robot
+- Verify velocity monitoring and IMU data
+- Implement UART communication protocols for real hardware
 - Develop ROS 2 nodes for control and feedback
-- Integrate with Nav2 stack
 - Test on actual hardware
 
 ## Dependencies
