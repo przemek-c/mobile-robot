@@ -31,9 +31,27 @@ This project aims to develop a small forklift mobile robot using ROS 2 Jazzy on 
 
 ## Navigation with Nav2
 - Use Nav2 stack for autonomous navigation
-- Robot description: `urdf/robot.urdf.xacro`
-- Configure robot parameters in URDF/Xacro files
+- Robot description: `src/mobile_robot_description/urdf/robot.urdf.xacro`
+- Launch file: `src/mobile_robot_description/launch/nav2_simulation.launch.py`
+- Configuration: `src/mobile_robot_description/config/nav2_params.yaml`
+- RViz config: `src/mobile_robot_description/rviz/nav2_default_view.rviz`
 - Set up navigation parameters (costmaps, planners, controllers)
+
+### Running Nav2 Simulation
+```bash
+# Source ROS 2
+source /opt/ros/jazzy/setup.bash
+
+# Build the workspace
+cd /home/alan/mobile-robot
+colcon build
+
+# Source the workspace
+source install/setup.bash
+
+# Launch Nav2 simulation
+ros2 launch mobile_robot_description nav2_simulation.launch.py
+```
 
 ## Velocity Control
 - Send linear and angular velocity commands to the robot
@@ -56,7 +74,7 @@ This project aims to develop a small forklift mobile robot using ROS 2 Jazzy on 
 2. **Hardware Interface**: Develop UART communication nodes for velocity commands and feedback
 3. **IMU Node**: ROS 2 node to read IMU data via UART
 4. **Velocity Control Node**: Node to send velocity commands and read feedback
-5. **Nav2 Integration**: Configure Nav2 with robot parameters
+5. **Nav2 Integration**: ✅ Created ROS 2 workspace and Nav2 configuration for forklift robot
 6. **Testing**: Unit tests and integration tests for each component
 7. **Simulation**: Optional Gazebo simulation for testing before hardware deployment
 
